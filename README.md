@@ -1,2 +1,2 @@
 # sanctions-analysts-copilot
-FinCrime Hackathon
+FinCrime Hackathon - sanctions
