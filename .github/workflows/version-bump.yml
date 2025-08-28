@@ -1,0 +1,40 @@
+name: Auto Version Bump
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  versioning:
+    if: github.event.pull_request.head.ref != 'main'
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Important to get all history and tags
+      - name: Configure Git identity
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "github-actions@github.com"
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Bump Version
+        run: |
+          python scripts/python/versioning/version_bump.py
+
+      - name: Commit version bump
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add version.txt
+          git commit -m "chore: auto version bump from GitHub Actions" || echo "No changes to commit "
+          git push origin develop
