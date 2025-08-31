@@ -34,7 +34,7 @@ def load_data(use_sample: bool, uploaded_file) -> pd.DataFrame:
 # =========================
 # Modeling utilities
 # =========================
-def build_pipeline() -> Pipeline:
+def build_model() -> Pipeline:
     """Create the preprocessing + model pipeline."""
     pre = ColumnTransformer(
         transformers=[
@@ -55,11 +55,11 @@ def train_and_evaluate(df: pd.DataFrame, test_size: float, threshold: float, ran
         X, y, test_size=test_size, stratify=y, random_state=random_state
     )
 
-    pipe = build_pipeline()
-    pipe.fit(X_train, y_train)
+    model = build_model()
+    model.fit(X_train, y_train)
 
-    proba = pipe.predict_proba(X_test)[:, 1]
-    y_pred = (proba >= threshold).astype(int)
+    probability = model.predict_proba(X_test)[:, 1]
+    y_pred = (probability >= threshold).astype(int)
 
     precision, recall, f1, _ = precision_recall_fscore_support(y_test, y_pred, average="binary")
     cm = confusion_matrix(y_test, y_pred)
@@ -68,7 +68,7 @@ def train_and_evaluate(df: pd.DataFrame, test_size: float, threshold: float, ran
         {"Metric": ["Precision", "Recall", "F1"], "Score": [precision, recall, f1]}
     )
 
-    return pipe, X_test, y_test, proba, y_pred, cm, metrics_df
+    return model, X_test, y_test, probability, y_pred, cm, metrics_df
 
 
 def get_coeff_table(pipe: Pipeline) -> pd.DataFrame:
@@ -178,7 +178,7 @@ def main():
     # Data
     df = load_data(use_sample, uploaded)
     st.subheader("Dataset Preview")
-    st.dataframe(df.head(12))
+    st.dataframe(df.head(5))
 
     # Train & evaluate
     pipe, X_test, y_test, proba, y_pred, cm, metrics_df = train_and_evaluate(
@@ -241,7 +241,7 @@ def main():
         mime="text/csv",
     )
 
-    st.caption("⚠️ Demo only. Not for regulatory use.")
+    st.caption("⚠️ Hackthon Demo only.")
 
 
 if __name__ == "__main__":
