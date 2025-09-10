@@ -7,3 +7,4 @@
 | v0.1.3_20250831124119 | Added documentation (#6)
 
 * Added documentation | 2025-08-31|
+| v0.1.4_20250910215429 | optimise code (#7) | 2025-09-10|
