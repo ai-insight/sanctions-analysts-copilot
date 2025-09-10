@@ -8,3 +8,4 @@
 
 * Added documentation | 2025-08-31|
 | v0.1.4_20250910215429 | optimise code (#7) | 2025-09-10|
+| v0.1.5_20250910223209 | refractured the  code. (#8) | 2025-09-10|
